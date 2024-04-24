@@ -1,8 +1,11 @@
+import { SignIn } from "@clerk/clerk-react"
+
 export default function Login() {
     return (
         <>
-            <p className="text-lg font-semibold">Create an account</p>
-            <p></p>
+            <div className="h-screen w-screen flex justify-center items-center">
+                <SignIn />
+            </div>
         </>
     )
 }

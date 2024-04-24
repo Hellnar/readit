@@ -2,9 +2,9 @@
 [x] Init Vite project
 [x] Add Tailwind and Shadcn
 [x] Dark mode
-[] Login page
+[x] Integrate Clerk
+[x] Login page
 [] User books page
-[] Login via clerk
 [] Create DB in supabase, define columns for books
 [] Add book
 [] Show get books
