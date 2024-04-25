@@ -5,7 +5,7 @@
 [x] Integrate Clerk
 [x] Login page
 [] User books page
-[] Create DB in supabase, define columns for books
+[x] Create DB in supabase, define columns for books
 [] Add book
 [] Show get books
 [] Delete book
