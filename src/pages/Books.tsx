@@ -48,6 +48,15 @@ export default function Books() {
         }
     })
 
+    const deleteBookMutation = useMutation({
+        mutationFn: async (id) => {
+            return await supabase.from("books").delete().eq("id", id)
+        },
+        onSuccess: () => {
+            client.invalidateQueries({queryKey: ["books"]})
+        }
+    })
+
     function updateNewBook(e) {
         const {id, value} = e.target
         setNewBook({...newBook, [id]: value})
@@ -61,9 +70,9 @@ export default function Books() {
         setNewBookDialog(e)
     }
 
-    // if(books.status === "success") {
-    //     console.log(books.data)
-    // }
+    function deleteBook(id) {
+        deleteBookMutation.mutate(id)
+    }
 
     return (
         <>
@@ -134,6 +143,7 @@ export default function Books() {
                             <p>{book.status}</p>
                             <p>{book.rating}</p>
                             <p>{book.comment}</p>
+                            <Button variant="destructive" onClick={() => deleteBook(book.id)}>Delete</Button>
                         </Card>
                     )
                 })}
