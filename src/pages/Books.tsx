@@ -1,5 +1,6 @@
+import { useState } from "react"
 import { UserButton } from "@clerk/clerk-react"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import supabase from "@/config/supabase"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -14,17 +15,55 @@ import {
 } from "@/components/ui/dialog"
 
 export default function Books() {
+    const [newBook, setNewBook] = useState({
+        cover: "",
+        name: "",
+        author: "",
+        series: "",
+        isbn: "",
+        status: "",
+        rating: "",
+        comment: ""
+    })
+    const [newBookDialog, setNewBookDialog] = useState(false)
+    const client = useQueryClient()
 
     const books = useQuery({
         queryKey: ["books"],
         queryFn: async () => {
             return await supabase.from("books").select()
-        } 
+        },
+        refetchOnWindowFocus: false
     })
 
-    if(books.status === "success") {
-        console.log(books.data)
+    // Mutations
+
+    const addBookMutation = useMutation({
+        mutationFn: async (book) => {
+            return await supabase.from("books").insert(book)
+        },
+        onSuccess: () => {
+            client.invalidateQueries({queryKey: ["books"]})
+            newBookDialogStatus(false)
+        }
+    })
+
+    function updateNewBook(e) {
+        const {id, value} = e.target
+        setNewBook({...newBook, [id]: value})
     }
+
+    function addBook() {
+        addBookMutation.mutate(newBook)
+    }
+
+    function newBookDialogStatus(e) {
+        setNewBookDialog(e)
+    }
+
+    // if(books.status === "success") {
+    //     console.log(books.data)
+    // }
 
     return (
         <>
@@ -34,7 +73,7 @@ export default function Books() {
             </div>
 
             <div className="px-4 pt-4">
-                <Dialog>
+                <Dialog open={newBookDialog} onOpenChange={newBookDialogStatus}>
                     <DialogTrigger asChild>
                         <Button variant="outline">Add book</Button>
                     </DialogTrigger>
@@ -44,34 +83,38 @@ export default function Books() {
                         </DialogHeader>
                         <div className="max-h-[60vh] flex flex-col gap-2 py-4 px-2 overflow-y-auto">
                             <div className="grid flex-1 gap-2">
+                                <Label htmlFor="cover">Book cover</Label>
+                                <Input id="cover" value={newBook.cover} onChange={updateNewBook}/>
+                            </div>
+                            <div className="grid flex-1 gap-2">
                                 <Label htmlFor="name">Book name</Label>
-                                <Input id="name" defaultValue=""/>
+                                <Input id="name" value={newBook.name} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="author">Book author</Label>
-                                <Input id="author" defaultValue=""/>
+                                <Input id="author" value={newBook.author} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="series">Series</Label>
-                                <Input id="series" defaultValue=""/>
+                                <Input id="series" value={newBook.series} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="isbn">ISBN</Label>
-                                <Input id="isbn" defaultValue=""/>
+                                <Input id="isbn" value={newBook.isbn} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="status">Status</Label>
-                                <Input id="status" defaultValue=""/>
+                                <Input id="status" value={newBook.status} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="rating">Rating</Label>
-                                <Input id="rating" defaultValue=""/>
+                                <Input id="rating" value={newBook.rating} onChange={updateNewBook}/>
                             </div>
                             <div className="grid flex-1 gap-2">
                                 <Label htmlFor="comment">Comment</Label>
-                                <Input id="comment" defaultValue=""/>
+                                <Input id="comment" value={newBook.comment} onChange={updateNewBook}/>
                             </div>
-                            <Button>Add book</Button>
+                            <Button onClick={addBook}>Add book</Button>
                         </div>
                     </DialogContent>
                 </Dialog>
