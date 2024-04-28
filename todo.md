@@ -4,12 +4,12 @@
 [x] Dark mode
 [x] Integrate Clerk
 [x] Login page
-[] User books page
+[x] User books page
 [x] Create DB in supabase, define columns for books
-[] Add book
-[] Show get books
-[] Delete book
+[x] Add book
+[x] Show get books
+[x] Delete book
 [] Edit book
-[] Host site on Cloudflare
+[x] Host site on Cloudflare
 
 ## Step 2 - improvements
