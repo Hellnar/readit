@@ -38,6 +38,7 @@ export default function Books() {
         rating: 0,
         comment: ""
     })
+    const [currentBook, setCurrentBook] = useState<Book | null>(null)
     const [isNewBookModal, setIsNewBookModal] = useState(false)
     const [isUpdateBookModal, setIsUpdateBookModal] = useState(false)
     const client = useQueryClient()
@@ -76,7 +77,6 @@ export default function Books() {
             return await supabase.from("books").update(book).eq("id", book.id)
         },
         onSuccess: () => {
-            setIsUpdateBookModal(false)
             client.invalidateQueries({queryKey: ["books"]})
         }
     })
@@ -98,8 +98,8 @@ export default function Books() {
         deleteBookMutation.mutate(id)
     }
 
-    function updateBook() {
-        console.log(`updateBook`)
+    function updateBook(book: Book) {
+        setCurrentBook(book)
         setIsUpdateBookModal(true)
     }
 
@@ -171,19 +171,21 @@ export default function Books() {
                             <div className="w-fit flex justify-center"><Badge color={badgeColors[book.status]}>{book.status}</Badge></div>
                             <div className="w-fit flex justify-center"><Badge color={ratingColor[book.rating]}>{book.rating}</Badge></div>
                             <p className="text-gray-500 dark:text-gray-400">{book.comment}</p>
-                            <div><Button color="blue" onClick={updateBook}>Update</Button></div>
+                            <div><Button color="blue" onClick={() => updateBook(book)}>Update</Button></div>
                             <div><Button color="red" onClick={() => deleteBook(book.id as number)}>Delete</Button></div>
 
-                            <UpdateBookModal 
-                                currentBook={book} 
-                                isUpdateBookModal={isUpdateBookModal} 
-                                setIsUpdateBookModal={setIsUpdateBookModal} 
-                                updateBookMutation={updateBookMutation} 
-                            />
+                            
                         </div>
                     )
                 })}
             </div>
+
+            {isUpdateBookModal && <UpdateBookModal 
+                currentBook={currentBook} 
+                isUpdateBookModal={isUpdateBookModal} 
+                setIsUpdateBookModal={setIsUpdateBookModal} 
+                updateBookMutation={updateBookMutation} 
+            />}
         </div>
         
     )

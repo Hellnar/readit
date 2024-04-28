@@ -3,19 +3,22 @@ import { Modal, Label, Button, TextInput } from "flowbite-react"
 import { Book } from "../../utils/types"
 
 interface UpdateBookModal {
-    currentBook: Book,
+    currentBook: Book | null,
     isUpdateBookModal: boolean,
     setIsUpdateBookModal: React.Dispatch<boolean>,
     updateBookMutation: any
 }
 
 export function UpdateBookModal({currentBook, isUpdateBookModal, setIsUpdateBookModal, updateBookMutation}: UpdateBookModal) {
-    const [updatedBook, setUpdatedBook] = useState<Book>(currentBook)
+    const [updatedBook, setUpdatedBook] = useState<Book | null>(currentBook)
+    console.log(currentBook)
     
     function changeUpdatedBook(e: React.ChangeEvent<HTMLInputElement>) {
         const {id, value} = e.target
-        setUpdatedBook({...updatedBook, [id]: value})
+        setUpdatedBook({...updatedBook, [id]: value} as Book)
     }
+
+    if(updatedBook === null) return (<p>Book is null</p>)
 
     return (
         <Modal show={isUpdateBookModal} onClose={() => setIsUpdateBookModal(false)}>
