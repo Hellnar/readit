@@ -59,6 +59,16 @@ export default function Books() {
         },
         onSuccess: () => {
             client.invalidateQueries({queryKey: ["books"]})
+            setNewBook({
+                cover: "",
+                name: "",
+                author: "",
+                series: "",
+                isbn: "",
+                status: "",
+                rating: 0,
+                comment: ""
+            })
             newBookDialogStatus(false)
         }
     })
@@ -77,6 +87,7 @@ export default function Books() {
             return await supabase.from("books").update(book).eq("id", book.id)
         },
         onSuccess: () => {
+            setIsUpdateBookModal(false)
             client.invalidateQueries({queryKey: ["books"]})
         }
     })
