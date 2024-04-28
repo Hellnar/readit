@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Book } from "@/utils/types"
 import {
   Dialog,
   DialogContent,
@@ -15,14 +16,14 @@ import {
 } from "@/components/ui/dialog"
 
 export default function Books() {
-    const [newBook, setNewBook] = useState({
+    const [newBook, setNewBook] = useState<Book>({
         cover: "",
         name: "",
         author: "",
         series: "",
         isbn: "",
         status: "",
-        rating: "",
+        rating: 0,
         comment: ""
     })
     const [newBookDialog, setNewBookDialog] = useState(false)
@@ -39,7 +40,7 @@ export default function Books() {
     // Mutations
 
     const addBookMutation = useMutation({
-        mutationFn: async (book) => {
+        mutationFn: async (book: Book) => {
             return await supabase.from("books").insert(book)
         },
         onSuccess: () => {
@@ -49,7 +50,7 @@ export default function Books() {
     })
 
     const deleteBookMutation = useMutation({
-        mutationFn: async (id) => {
+        mutationFn: async (id: number) => {
             return await supabase.from("books").delete().eq("id", id)
         },
         onSuccess: () => {
@@ -57,7 +58,7 @@ export default function Books() {
         }
     })
 
-    function updateNewBook(e) {
+    function updateNewBook(e: React.ChangeEvent<HTMLInputElement>) {
         const {id, value} = e.target
         setNewBook({...newBook, [id]: value})
     }
@@ -66,11 +67,11 @@ export default function Books() {
         addBookMutation.mutate(newBook)
     }
 
-    function newBookDialogStatus(e) {
+    function newBookDialogStatus(e: boolean) {
         setNewBookDialog(e)
     }
 
-    function deleteBook(id) {
+    function deleteBook(id: number) {
         deleteBookMutation.mutate(id)
     }
 
@@ -129,10 +130,10 @@ export default function Books() {
                 </Dialog>
             </div>
 
-            <div className="p-4">
+            <div className="flex flex-col gap-2 p-4">
                 {books.data?.data?.map((book, index) => {
                     return (
-                        <Card key={index} className="flex items-center gap-4 p-4">
+                        <Card key={index} className="flex justify-between items-center gap-4 p-4">
                             <div className="w-16 h-16 rounded-lg">
                                 <img src={book.cover} className="object-cover h-16 w-16 rounded-lg" />
                             </div>
