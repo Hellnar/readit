@@ -1,19 +1,9 @@
 import { useState } from "react"
 import { UserButton } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import supabase from "@/config/supabase"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Book } from "@/utils/types"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import supabase from "../config/supabase"
+import { Book } from "../utils/types"
+import { Button, Modal, Label, TextInput, DarkThemeToggle } from "flowbite-react"
 
 export default function Books() {
     const [newBook, setNewBook] = useState<Book>({
@@ -26,7 +16,7 @@ export default function Books() {
         rating: 0,
         comment: ""
     })
-    const [newBookDialog, setNewBookDialog] = useState(false)
+    const [isNewBookModal, setIsNewBookModal] = useState(false)
     const client = useQueryClient()
 
     const books = useQuery({
@@ -68,7 +58,7 @@ export default function Books() {
     }
 
     function newBookDialogStatus(e: boolean) {
-        setNewBookDialog(e)
+        setIsNewBookModal(e)
     }
 
     function deleteBook(id: number) {
@@ -76,80 +66,79 @@ export default function Books() {
     }
 
     return (
-        <>
+        <div className="w-screen h-screen bg-white dark:bg-gray-800">
             <div className="flex justify-between p-4 border-b">
-                <p>Books</p>
-                <UserButton />
+                <p className="text-gray-500 dark:text-gray-400">Books</p>
+                <div className="flex gap-2 items-center">
+                    <DarkThemeToggle />
+                    <UserButton />
+                </div>
             </div>
 
             <div className="px-4 pt-4">
-                <Dialog open={newBookDialog} onOpenChange={newBookDialogStatus}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Add book</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Add new book</DialogTitle>
-                        </DialogHeader>
-                        <div className="max-h-[60vh] flex flex-col gap-2 py-4 px-2 overflow-y-auto">
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="cover">Book cover</Label>
-                                <Input id="cover" value={newBook.cover} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="name">Book name</Label>
-                                <Input id="name" value={newBook.name} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="author">Book author</Label>
-                                <Input id="author" value={newBook.author} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="series">Series</Label>
-                                <Input id="series" value={newBook.series} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="isbn">ISBN</Label>
-                                <Input id="isbn" value={newBook.isbn} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="status">Status</Label>
-                                <Input id="status" value={newBook.status} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="rating">Rating</Label>
-                                <Input id="rating" value={newBook.rating} onChange={updateNewBook}/>
-                            </div>
-                            <div className="grid flex-1 gap-2">
-                                <Label htmlFor="comment">Comment</Label>
-                                <Input id="comment" value={newBook.comment} onChange={updateNewBook}/>
-                            </div>
-                            <Button onClick={addBook}>Add book</Button>
+                <Button color="blue" onClick={() => setIsNewBookModal(true)}>Add book</Button>
+                <Modal show={isNewBookModal} onClose={() => setIsNewBookModal(false)}>
+                    <Modal.Header>Add new book</Modal.Header>
+                    <Modal.Body>
+                    <div className="max-h-[60vh] flex flex-col gap-2 py-4 px-2 overflow-y-auto">
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="cover">Book cover</Label>
+                            <TextInput id="cover" value={newBook.cover} onChange={updateNewBook}/>
                         </div>
-                    </DialogContent>
-                </Dialog>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="name">Book name</Label>
+                            <TextInput id="name" value={newBook.name} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="author">Book author</Label>
+                            <TextInput id="author" value={newBook.author} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="series">Series</Label>
+                            <TextInput id="series" value={newBook.series} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="isbn">ISBN</Label>
+                            <TextInput id="isbn" value={newBook.isbn} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="status">Status</Label>
+                            <TextInput id="status" value={newBook.status} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="rating">Rating</Label>
+                            <TextInput id="rating" value={newBook.rating} onChange={updateNewBook}/>
+                        </div>
+                        <div className="grid flex-1 gap-2">
+                            <Label htmlFor="comment">Comment</Label>
+                            <TextInput id="comment" value={newBook.comment} onChange={updateNewBook}/>
+                        </div>
+                        <Button onClick={addBook}>Add book</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
             </div>
 
             <div className="flex flex-col gap-2 p-4">
                 {books.data?.data?.map((book, index) => {
                     return (
-                        <Card key={index} className="flex justify-between items-center gap-4 p-4">
+                        <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
                             <div className="w-16 h-16 rounded-lg">
                                 <img src={book.cover} className="object-cover h-16 w-16 rounded-lg" />
                             </div>
-                            <p>{book.name}</p>
-                            <p>{book.author}</p>
-                            <p>{book.series}</p>
-                            <p>{book.isbn}</p>
-                            <p>{book.status}</p>
-                            <p>{book.rating}</p>
-                            <p>{book.comment}</p>
-                            <Button variant="destructive" onClick={() => deleteBook(book.id)}>Delete</Button>
-                        </Card>
+                            <p className="text-gray-500 dark:text-gray-400">{book.name}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.author}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.series}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.isbn}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.status}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.rating}</p>
+                            <p className="text-gray-500 dark:text-gray-400">{book.comment}</p>
+                            <Button onClick={() => deleteBook(book.id)}>Delete</Button>
+                        </div>
                     )
                 })}
             </div>
-        </>
+        </div>
         
     )
 }
