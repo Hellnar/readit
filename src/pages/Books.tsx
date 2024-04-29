@@ -115,7 +115,7 @@ export default function Books() {
     }
 
     return (
-        <div className="w-screen h-screen bg-white dark:bg-gray-800">
+        <div className="w-full h-full bg-white dark:bg-gray-800">
             <div className="flex justify-between p-4 border-b">
                 <p className="text-xl font-bold text-gray-500 dark:text-gray-400">ReadIt</p>
                 <div className="flex gap-2 items-center">
@@ -171,21 +171,18 @@ export default function Books() {
             <div className="flex flex-col gap-2 p-4">
                 {books.data?.data?.map((book: Book, index) => {
                     return (
-                        <div key={index} className="grid grid-cols-10 items-center gap-4 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
+                        <div key={index} className="grid grid-cols-11 items-center gap-4 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
                             <div className="w-16 h-16 rounded-lg">
                                 <img src={book.cover} className="object-cover h-16 w-16 rounded-lg" />
                             </div>
-                            <p className="text-gray-500 dark:text-gray-400">{book.name}</p>
+                            <p className="col-span-3 text-gray-500 dark:text-gray-400">{book.name}</p>
                             <p className="text-gray-500 dark:text-gray-400">{book.author}</p>
                             <p className="text-gray-500 dark:text-gray-400">{book.series}</p>
                             <p className="text-gray-500 dark:text-gray-400">{book.isbn}</p>
                             <div className="w-fit flex justify-center"><Badge color={badgeColors[book.status]}>{book.status}</Badge></div>
-                            <div className="w-fit flex justify-center"><Badge color={ratingColor[book.rating]}>{book.rating}</Badge></div>
-                            <p className="text-gray-500 dark:text-gray-400">{book.comment}</p>
+                            <div className="w-fit flex justify-center">{book.rating > 0 ? <Badge color={ratingColor[book.rating]}>{book.rating}</Badge> : null}</div>
                             <div><Button color="blue" onClick={() => updateBook(book)}>Update</Button></div>
                             <div><Button color="red" onClick={() => deleteBook(book.id as number)}>Delete</Button></div>
-
-                            
                         </div>
                     )
                 })}
