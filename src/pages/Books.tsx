@@ -3,7 +3,7 @@ import { UserButton } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import supabase from "../config/supabase"
 import { Book } from "../utils/types"
-import { Button, Modal, Label, TextInput, Badge, DarkThemeToggle } from "flowbite-react"
+import { Button, Modal, Label, TextInput, Badge, Dropdown, DarkThemeToggle } from "flowbite-react"
 import { UpdateBookModal } from "../components/books/UpdateBookModal"
 import { BooksStats } from "../components/books/BooksStats"
 
@@ -42,6 +42,7 @@ export default function Books() {
     const [currentBook, setCurrentBook] = useState<Book | null>(null)
     const [isNewBookModal, setIsNewBookModal] = useState(false)
     const [isUpdateBookModal, setIsUpdateBookModal] = useState(false)
+    const [filter, setFilter] = useState("all")
     const client = useQueryClient()
 
     const books = useQuery({
@@ -115,8 +116,15 @@ export default function Books() {
         setIsUpdateBookModal(true)
     }
 
+    if(books.status === "pending") return <p>Loading...</p>
+    if(books.status === "error") return <p>Error</p>
+
+    if(!books.data.data) return <p>Error</p>
+    const filteredBooks = filter === "all" ? books.data.data : books.data.data.filter(item => item.status === filter)
+    console.log(filteredBooks)
+
     return (
-        <div className="w-full h-full bg-white dark:bg-gray-800">
+        <div className="min-h-[100vh] w-full h-full bg-white dark:bg-gray-800">
             <div className="flex justify-between p-4 border-b">
                 <p className="text-xl font-bold text-gray-500 dark:text-gray-400">ReadIt</p>
                 <div className="flex gap-2 items-center">
@@ -125,7 +133,7 @@ export default function Books() {
                 </div>
             </div>
 
-            <div className="px-4 pt-4">
+            <div className="flex gap-2 px-4 pt-4">
                 <Button color="blue" onClick={() => setIsNewBookModal(true)}>Add book</Button>
                 <Modal show={isNewBookModal} onClose={() => setIsNewBookModal(false)}>
                     <Modal.Header>Add new book</Modal.Header>
@@ -167,12 +175,20 @@ export default function Books() {
                         </div>
                     </Modal.Body>
                 </Modal>
+
+                <Dropdown label="Filter" dismissOnClick={false}>
+                    <Dropdown.Item onClick={() => setFilter("all")}>All</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFilter("read")}>Read</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFilter("in process")}>In process</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFilter("not read")}>Not read</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setFilter("wishlist")}>Wishlist</Dropdown.Item>
+                </Dropdown>
             </div>
 
-            <BooksStats books={books?.data?.data ? books.data.data : []} />
+            <BooksStats books={filteredBooks} />
 
             <div className="flex flex-col gap-2 p-4">
-                {books.data?.data?.map((book: Book, index) => {
+                {filteredBooks.map((book: Book, index) => {
                     return (
                         <div key={index} className="grid grid-cols-11 items-center gap-4 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
                             <div className="w-16 h-16 rounded-lg">
