@@ -4,7 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import supabase from "../config/supabase"
 import { Book } from "../utils/types"
 import { Button, Modal, Label, TextInput, Badge, DarkThemeToggle } from "flowbite-react"
-import { UpdateBookModal } from "../components/books/updateBookModal"
+import { UpdateBookModal } from "../components/books/UpdateBookModal"
+import { BooksStats } from "../components/books/BooksStats"
 
 interface badgeColorsInterface {
     [key: string]: string
@@ -13,8 +14,8 @@ interface badgeColorsInterface {
 const badgeColors: badgeColorsInterface = {
     "not read": "gray",
     "in process": "blue",
-    "done": "green",
-    "want": "purple"
+    "read": "green",
+    "wishlist": "purple"
 }
 
 interface ratingColorInterface {[key: string]: string}
@@ -167,6 +168,8 @@ export default function Books() {
                     </Modal.Body>
                 </Modal>
             </div>
+
+            <BooksStats books={books?.data?.data ? books.data.data : []} />
 
             <div className="flex flex-col gap-2 p-4">
                 {books.data?.data?.map((book: Book, index) => {

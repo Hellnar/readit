@@ -9,7 +9,9 @@
 [x] Add book
 [x] Show get books
 [x] Delete book
-[] Edit book
+[x] Edit book
 [x] Host site on Cloudflare
 
 ## Step 2 - improvements
+[] Show amount of books by statuses
+[] Filter books by status
