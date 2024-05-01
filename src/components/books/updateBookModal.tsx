@@ -2,14 +2,14 @@ import { useState } from "react"
 import { Modal, Label, Button, TextInput } from "flowbite-react"
 import { Book } from "../../utils/types"
 
-interface UpdateBookModal {
+interface BookModal {
     currentBook: Book | null,
     isUpdateBookModal: boolean,
     setIsUpdateBookModal: React.Dispatch<boolean>,
     updateBookMutation: any
 }
 
-export function UpdateBookModal({currentBook, isUpdateBookModal, setIsUpdateBookModal, updateBookMutation}: UpdateBookModal) {
+export function UpdateBookModal({currentBook, isUpdateBookModal, setIsUpdateBookModal, updateBookMutation}: BookModal) {
     const [updatedBook, setUpdatedBook] = useState<Book | null>(currentBook)
     console.log(currentBook)
     
