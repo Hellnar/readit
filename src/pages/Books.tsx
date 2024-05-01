@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import supabase from "../config/supabase"
 import { Book } from "../utils/types"
 import { Button, Modal, Label, TextInput, Badge, Dropdown, DarkThemeToggle } from "flowbite-react"
-import { UpdateBookModal } from "../components/books/UpdateBookModal"
 import { BooksStats } from "../components/books/BooksStats"
+import { UpdateBookModal } from "../components/books/UpdateBookModal"
 
 interface badgeColorsInterface {
     [key: string]: string
