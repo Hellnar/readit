@@ -13,5 +13,5 @@
 [x] Host site on Cloudflare
 
 ## Step 2 - improvements
-[] Show amount of books by statuses
-[] Filter books by status
+[x] Show amount of books by statuses
+[x] Filter books by status
