@@ -9,12 +9,14 @@ export function BooksStats({books}: StatsProps) {
     const stats = {
         books: 0,
         read: 0,
+        in_process: 0,
         not_read: 0,
         wishlist: 0
     }
 
     for(const book of books) {
         if(book.status === "read") stats.read += 1
+        if(book.status === "in process") stats.in_process += 1
         if(book.status === "not read") stats.not_read += 1
         if(book.status === "wishlist") stats.wishlist += 1
     }
@@ -25,9 +27,13 @@ export function BooksStats({books}: StatsProps) {
                 <p className="font-bold text-gray-500 dark:text-gray-400">Books</p>
                 <p className="text-gray-500 dark:text-gray-400">{books.length}</p>
             </div>
-            <div className="min-w-32 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
+             <div className="min-w-32 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
                 <p className="font-bold text-green-500 dark:text-green-400">Read</p>
                 <p className="text-gray-500 dark:text-gray-400">{stats.read}</p>
+            </div>
+            <div className="min-w-32 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
+                <p className="font-bold text-sky-500 dark:text-sky-400">In process</p>
+                <p className="text-gray-500 dark:text-gray-400">{stats.in_process}</p>
             </div>
             <div className="min-w-32 p-4 border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700">
                 <p className="font-bold text-gray-500 dark:text-gray-400">Not read</p>
