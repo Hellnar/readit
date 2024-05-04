@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { UserButton } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { TbTrash, TbEdit } from "react-icons/tb";
 import supabase from "../config/supabase"
 import { Book } from "../utils/types"
 import { Button, Modal, Label, TextInput, Badge, Dropdown, DarkThemeToggle } from "flowbite-react"
@@ -125,7 +126,7 @@ export default function Books() {
 
     return (
         <div className="min-h-[100vh] w-full h-full bg-white dark:bg-gray-800">
-            <div className="flex justify-between p-4 border-b">
+            <div className="flex justify-between p-4 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <p className="text-xl font-bold text-gray-500 dark:text-gray-400">ReadIt</p>
                 <div className="flex gap-2 items-center">
                     <DarkThemeToggle />
@@ -200,8 +201,8 @@ export default function Books() {
                             <p className="text-gray-500 dark:text-gray-400">{book.isbn}</p>
                             <div className="w-fit flex justify-center"><Badge color={badgeColors[book.status]}>{book.status}</Badge></div>
                             <div className="w-fit flex justify-center">{book.rating > 0 ? <Badge color={ratingColor[book.rating]}>{book.rating}</Badge> : null}</div>
-                            <div><Button color="blue" onClick={() => updateBook(book)}>Update</Button></div>
-                            <div><Button color="red" onClick={() => deleteBook(book.id as number)}>Delete</Button></div>
+                            <div><Button color="blue" onClick={() => updateBook(book)}><TbEdit size={18} /></Button></div>
+                            <div><Button color="red" onClick={() => deleteBook(book.id as number)}><TbTrash size={18} /></Button></div>
                         </div>
                     )
                 })}
